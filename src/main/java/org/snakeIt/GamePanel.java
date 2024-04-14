@@ -16,7 +16,7 @@ public class GamePanel extends JPanel implements ActionListener {
     static final int DELAY = 75; // THe higher the number, the slower the game, and vice versa.
 
     final int x[] = new int[GAME_UNITS];
-    final int y[] = new int [GAME_UNITS];
+    final int y[] = new int[GAME_UNITS];
     int bodyParts = 6; // The body parts on the snake.
     int applesEaten = 0;
     int appleX; // The X co-ordinate of where the apple is placed. will appear randomly each time snake eats apple.
@@ -37,50 +37,54 @@ public class GamePanel extends JPanel implements ActionListener {
         startGame();
 
     }
+
     public void startGame() {
-    newApple();
-    running = true;
-    timer = new Timer(DELAY,this);
-    timer.start();
+        newApple();
+        running = true;
+        timer = new Timer(DELAY, this);
+        timer.start();
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         draw(g);
     }
+
     // *** GRID (Visual depiction of the grid. Can make user commnnds to turn on or off ***
-    public void draw (Graphics g) {
+    public void draw(Graphics g) {
         g.setColor(Color.darkGray);
-        for (int i = 0;i<SCREEN_HEIGHT / UNIT_SIZE; i++) {
-            g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE,SCREEN_HEIGHT);
-            g.drawLine(0, i*UNIT_SIZE, SCREEN_WIDTH,i*UNIT_SIZE);
+        for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) {
+            g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
+            g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
         }
         g.setColor(Color.red);
-        g.fillOval(appleX,appleY,UNIT_SIZE,UNIT_SIZE);
+        g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
 
-        for (int i = 0; i < bodyParts ; i++) {
+        for (int i = 0; i < bodyParts; i++) {
             if (i == 0) {
                 g.setColor(Color.green);
-                g.fillRect(x[i],y[i],UNIT_SIZE,UNIT_SIZE);
+                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
 
             } else {
-                g.setColor(new Color(45,180,0)); //RGB Colours
-                g.fillRect(x[i],y[i],UNIT_SIZE,UNIT_SIZE);
+                g.setColor(new Color(45, 180, 0)); //RGB Colours
+                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
             }
 
         }
 
     }
+
     public void newApple() {
-        appleX = random.nextInt((int)SCREEN_WIDTH / UNIT_SIZE )*UNIT_SIZE; // we're going to have the apple appear somewhere along the x access.
-        appleY = random.nextInt((int)SCREEN_HEIGHT / UNIT_SIZE )*UNIT_SIZE; // we're going to have the apple appear somewhere along the y access.
+        appleX = random.nextInt((int) SCREEN_WIDTH / UNIT_SIZE) * UNIT_SIZE; // we're going to have the apple appear somewhere along the x access.
+        appleY = random.nextInt((int) SCREEN_HEIGHT / UNIT_SIZE) * UNIT_SIZE; // we're going to have the apple appear somewhere along the y access.
 
 
     }
-    public void move () {
-             for (int i = bodyParts; i > 0; i--) {
-            x[i] = x[i-1];
-            y[i] = y[i-1];
+
+    public void move() {
+        for (int i = bodyParts; i > 0; i--) {
+            x[i] = x[i - 1];
+            y[i] = y[i - 1];
         }
         // Update the head position based on the direction
         switch (direction) {
@@ -99,9 +103,11 @@ public class GamePanel extends JPanel implements ActionListener {
         }
 
     }
+
     public void checkAPple() {
 
     }
+
     public void checkCollisions() {
 
         // This checks if head collides with body
@@ -132,28 +138,58 @@ public class GamePanel extends JPanel implements ActionListener {
         }
 
     }
+
     public void gameOver(Graphics g) {
 
     }
+
     @Override
-    public void actionPerformed(ActionEvent e){
+    public void actionPerformed(ActionEvent e) {
         if (running) {
             move();
             checkAPple();
             checkCollisions();
 
-        } repaint();
-
-}
-
-    public class MyKeyAdapter extends KeyAdapter {
-        @Override
-        public void keyPressed(KeyEvent e) {
         }
+        repaint();
 
     }
 
+    public class MyKeyAdapter extends KeyAdapter {
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                    if (direction != 'R') {
+                        direction = 'L';
+                    }
+            break;
+
+            case KeyEvent.VK_RIGHT:
+            if (direction != 'L') {
+                direction = 'R';
+            }
+            break;
+
+            case KeyEvent.VK_UP:
+                if(direction !='D') {
+
+            direction = 'U';
+        }   break;
+
+            case KeyEvent.VK_DOWN:
+            if(direction !='U')
+
+    {
+        direction = 'D';
+    }
+                break;
+
 
 }
+}}}
+
+
 
 
