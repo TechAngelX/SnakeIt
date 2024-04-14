@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
-import javax.swing.*;
 
 
 public class GamePanel extends JPanel implements ActionListener {
@@ -13,7 +12,7 @@ public class GamePanel extends JPanel implements ActionListener {
     static final int SCREEN_HEIGHT = 600; // In Pixels
     static final int UNIT_SIZE = 25; // In Pixels.
     static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT / UNIT_SIZE);
-    static final int DELAY = 75; // THe higher the number, the slower the game, and vice versa.
+    static final int GAME_SPEED = 85; // THe lower the number, the faster the game, and vice versa.
 
     final int x[] = new int[GAME_UNITS];
     final int y[] = new int[GAME_UNITS];
@@ -41,7 +40,7 @@ public class GamePanel extends JPanel implements ActionListener {
     public void startGame() {
         newApple();
         running = true;
-        timer = new Timer(DELAY, this);
+        timer = new Timer(GAME_SPEED, this);
         timer.start();
     }
 
@@ -51,25 +50,31 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     // *** GRID (Visual depiction of the grid. Can make user commnnds to turn on or off ***
+
+
     public void draw(Graphics g) {
-        g.setColor(Color.darkGray);
-        for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) {
-            g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
-            g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
-        }
-        g.setColor(Color.red);
-        g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
-
-        for (int i = 0; i < bodyParts; i++) {
-            if (i == 0) {
-                g.setColor(Color.green);
-                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
-
-            } else {
-                g.setColor(new Color(45, 180, 0)); //RGB Colours
-                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+        if (running) {
+            g.setColor(Color.darkGray);
+            for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) {
+                g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
+                g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
             }
+            g.setColor(Color.red);
+            g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
 
+            for (int i = 0; i < bodyParts; i++) {
+                if (i == 0) {
+                    g.setColor(Color.green);
+                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+
+                } else {
+                    g.setColor(new Color(45, 180, 0)); //RGB Colours
+                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                }
+
+            }
+        } else {
+            gameOver(g);
         }
 
     }
@@ -105,6 +110,14 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void checkAPple() {
+        if ((x[0] == appleX) && (y[0] == appleY)) {
+            applesEaten++;
+            newApple();
+            bodyParts++;
+
+
+
+        } // The x position of the head of the snake.
 
     }
 
@@ -112,13 +125,13 @@ public class GamePanel extends JPanel implements ActionListener {
 
         // This checks if head collides with body
         for (int i = bodyParts; i > 0; i--) {
-            if ((x[0] == x[i]) && (y[0] == y[i])) {
+            if ((x[0] == x[i]) && (y[0] == y[i])) { // x[0]  and y[0] are the x and y positions of the HEAD of the snake.
                 running = false;
             }
         }
         // This checks if head touches LEFT border
         if (x[0] < 0) {
-            running = false;
+            running = false; // Basically, if it touches itself, game over.
         }
         // This checks if head touches RIGHT border
         if (x[0] > SCREEN_WIDTH) {
@@ -140,6 +153,12 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void gameOver(Graphics g) {
+        // Game Over Text
+        g.setColor(Color.red);
+        g.setFont(new Font("Impact",Font.BOLD,75));
+        FontMetrics fontMetrics = getFontMetrics(g.getFont());
+        g.drawString("Game Over", (SCREEN_WIDTH - fontMetrics.stringWidth("Game Over")) / 2, SCREEN_HEIGHT / 2);
+
 
     }
 
