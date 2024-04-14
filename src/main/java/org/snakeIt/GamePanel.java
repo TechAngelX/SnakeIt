@@ -9,9 +9,9 @@ import javax.swing.*;
 
 public class GamePanel extends JPanel implements ActionListener {
 
-    static final int SCREEN_WIDTH = 600;
-    static final int SCREEN_HEIGHT = 600;
-    static final int UNIT_SIZE = 25;
+    static final int SCREEN_WIDTH = 600; // In pixels.
+    static final int SCREEN_HEIGHT = 600; // In Pixels
+    static final int UNIT_SIZE = 25; // In Pixels.
     static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT / UNIT_SIZE);
     static final int DELAY = 75; // THe higher the number, the slower the game, and vice versa.
 
@@ -46,13 +46,23 @@ public class GamePanel extends JPanel implements ActionListener {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
+        draw(g);
     }
-
+    // *** GRID (Visual depiction of the grid. Can make user commnnds to turn on or off ***
     public void draw (Graphics g) {
+        g.setColor(Color.darkGray);
+        for (int i = 0;i<SCREEN_HEIGHT / UNIT_SIZE; i++) {
+            g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE,SCREEN_HEIGHT);
+            g.drawLine(0, i*UNIT_SIZE, SCREEN_WIDTH,i*UNIT_SIZE);
+        }
+        g.setColor(Color.red);
+        g.fillOval(appleX,appleY,UNIT_SIZE,UNIT_SIZE);
 
     }
     public void newApple() {
+        appleX = random.nextInt((int)SCREEN_WIDTH / UNIT_SIZE )*UNIT_SIZE; // we're going to have the apple appear somewhere along the x access.
+        appleY = random.nextInt((int)SCREEN_HEIGHT / UNIT_SIZE )*UNIT_SIZE; // we're going to have the apple appear somewhere along the y access.
+
 
     }
     public void move () {
