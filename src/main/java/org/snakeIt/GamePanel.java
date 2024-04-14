@@ -15,7 +15,7 @@ public class GamePanel extends JPanel implements ActionListener {
     static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT / UNIT_SIZE);
     static final int DELAY = 75; // THe higher the number, the slower the game, and vice versa.
 
-    final int X[] = new int[GAME_UNITS];
+    final int x[] = new int[GAME_UNITS];
     final int y[] = new int [GAME_UNITS];
     int bodyParts = 6; // The body parts on the snake.
     int applesEaten = 0;
@@ -58,6 +58,18 @@ public class GamePanel extends JPanel implements ActionListener {
         g.setColor(Color.red);
         g.fillOval(appleX,appleY,UNIT_SIZE,UNIT_SIZE);
 
+        for (int i = 0; i < bodyParts ; i++) {
+            if (i == 0) {
+                g.setColor(Color.green);
+                g.fillRect(x[i],y[i],UNIT_SIZE,UNIT_SIZE);
+
+            } else {
+                g.setColor(new Color(45,180,0)); //RGB Colours
+                g.fillRect(x[i],y[i],UNIT_SIZE,UNIT_SIZE);
+            }
+
+        }
+
     }
     public void newApple() {
         appleX = random.nextInt((int)SCREEN_WIDTH / UNIT_SIZE )*UNIT_SIZE; // we're going to have the apple appear somewhere along the x access.
@@ -66,6 +78,25 @@ public class GamePanel extends JPanel implements ActionListener {
 
     }
     public void move () {
+             for (int i = bodyParts; i > 0; i--) {
+            x[i] = x[i-1];
+            y[i] = y[i-1];
+        }
+        // Update the head position based on the direction
+        switch (direction) {
+            case 'U':
+                y[0] = y[0] - UNIT_SIZE;
+                break;
+            case 'D':
+                y[0] = y[0] + UNIT_SIZE;
+                break;
+            case 'L':
+                x[0] = x[0] - UNIT_SIZE;
+                break;
+            case 'R':
+                x[0] = x[0] + UNIT_SIZE;
+                break;
+        }
 
     }
     public void checkAPple() {
