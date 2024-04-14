@@ -1,9 +1,12 @@
 package org.snakeIt;
 
 import javax.swing.*;
+import javax.tools.Tool;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
+import java.util.Scanner;
+import javax.sound.sampled.*;
 
 
 public class GamePanel extends JPanel implements ActionListener {
@@ -24,8 +27,11 @@ public class GamePanel extends JPanel implements ActionListener {
     boolean running = false;
     Timer timer;
     Random random;
+    private final Audio audio;
 
     GamePanel() {
+         audio = new Audio();
+
 
 
         random = new Random();
@@ -33,6 +39,7 @@ public class GamePanel extends JPanel implements ActionListener {
         this.setBackground(Color.black);
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
+
         startGame();
 
     }
@@ -42,6 +49,7 @@ public class GamePanel extends JPanel implements ActionListener {
         running = true;
         timer = new Timer(GAME_SPEED, this);
         timer.start();
+
     }
 
     public void paintComponent(Graphics g) {
@@ -71,8 +79,13 @@ public class GamePanel extends JPanel implements ActionListener {
                     g.setColor(new Color(45, 180, 0)); //RGB Colours
                     g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
-
             }
+            // SCORE BOARD
+            g.setColor(Color.red);
+            g.setFont(new Font("Impact",Font.BOLD,40));
+            FontMetrics fontMetrics = getFontMetrics(g.getFont());
+            g.drawString("Score: "+ applesEaten, (SCREEN_WIDTH - fontMetrics.stringWidth("Score: "+ applesEaten)) / 2, g.getFont().getSize());
+
         } else {
             gameOver(g);
         }
@@ -110,14 +123,14 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void checkAPple() {
-        if ((x[0] == appleX) && (y[0] == appleY)) {
+        if ((x[0] == appleX) && (y[0] == appleY)) { // x[0]  and y[0] are the x and y positions of the HEAD of the snake.
             applesEaten++;
             newApple();
             bodyParts++;
+           audio.audioEatApple();
 
 
-
-        } // The x position of the head of the snake.
+        }
 
     }
 
@@ -154,12 +167,27 @@ public class GamePanel extends JPanel implements ActionListener {
 
     public void gameOver(Graphics g) {
         // Game Over Text
+        g.setColor(Color.green);
+        g.setFont(new Font("Impact", Font.BOLD, 40));
+        FontMetrics fontMetrics1 = getFontMetrics(g.getFont());
+        g.drawString("Final Score: " + applesEaten, (SCREEN_WIDTH - fontMetrics1.stringWidth("Final Score: " + applesEaten)) / 2, g.getFont().getSize());
+
         g.setColor(Color.red);
-        g.setFont(new Font("Impact",Font.BOLD,75));
-        FontMetrics fontMetrics = getFontMetrics(g.getFont());
-        g.drawString("Game Over", (SCREEN_WIDTH - fontMetrics.stringWidth("Game Over")) / 2, SCREEN_HEIGHT / 2);
+        g.setFont(new Font("Impact", Font.BOLD, 75));
+        FontMetrics fontMetrics2 = getFontMetrics(g.getFont());
+        g.drawString("Game Over", (SCREEN_WIDTH - fontMetrics2.stringWidth("Game Over")) / 2, SCREEN_HEIGHT / 2);
 
-
+        g.setColor(Color.green);
+        g.setFont(new Font("Impact", Font.BOLD, 20));
+        FontMetrics fontMetrics3 = getFontMetrics(g.getFont());
+//        g.drawString("Play Again? Y/N: ", (SCREEN_WIDTH - fontMetrics3.stringWidth("Play Again? Y/N: ")) / 2, 420);
+        int choice = JOptionPane.showConfirmDialog(null, "Do you want to play again?", "Game Over", JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
+            startGame();
+        } else {
+            // Perform actions for No option, like exit or display farewell message
+            System.exit(0); // For example, exiting the game
+        }
     }
 
     @Override
