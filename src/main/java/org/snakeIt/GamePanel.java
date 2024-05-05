@@ -31,9 +31,6 @@ public class GamePanel extends JPanel implements ActionListener {
 
     GamePanel() {
          audio = new Audio();
-
-
-
         random = new Random();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.black);
@@ -47,10 +44,20 @@ public class GamePanel extends JPanel implements ActionListener {
     public void startGame() {
         newApple();
         running = true;
+        bodyParts = 6; // Reset body parts
+        applesEaten = 0; // Reset score
+        direction = 'R'; // Reset direction
         timer = new Timer(GAME_SPEED, this);
         timer.start();
-
+        // Reset snake position
+        x[0] = SCREEN_WIDTH / 2; // Start at the center of the screen
+        y[0] = SCREEN_HEIGHT / 2;
+        for (int i = 1; i < bodyParts; i++) {
+            x[i] = x[0] - i * UNIT_SIZE;
+            y[i] = y[0];
+        }
     }
+
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
