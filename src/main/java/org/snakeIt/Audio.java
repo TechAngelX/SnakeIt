@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Audio {
-    public final String SOUND_FILE_PATH_EAT_APPLE = "\"resources/scoreSound.wav";
+    public final String SOUND_FILE_PATH_EAT_APPLE = "src/main/resources/scoreSound.wav";
     public void audioEatApple() {
         try {
             File soundFile = new File(SOUND_FILE_PATH_EAT_APPLE);
