@@ -3,7 +3,5 @@ A classic graphical Snake game implementation in Java. Control the snake, eat ap
 <br><h3> © 2024 - Ricki Angel</h3>
 <br>Credit: 'Bro Code' - https://www.youtube.com/watch?v=bI6e6qjJ8JQ
 <br>Credit: 'StackOverflow' https://stackoverflow.com/questions/34036216/drawing-java-grid-using-swing
-![Screenshot 1](src/resources/Screenshot1.png)
-
 
 ![Screenshot]src/main/resources/Screenshot1.png)
