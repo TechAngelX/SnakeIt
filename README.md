@@ -6,3 +6,4 @@ A classic graphical Snake game implementation in Java. Control the snake, eat ap
 ![Screenshot 1](src/resources/Screenshot1.png)
 
 
+![Screenshot]src/main/resources/Screenshot1.png/image.jpg)
