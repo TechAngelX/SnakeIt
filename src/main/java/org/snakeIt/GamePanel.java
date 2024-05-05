@@ -15,7 +15,7 @@ public class GamePanel extends JPanel implements ActionListener {
     static final int SCREEN_HEIGHT = 600; // In Pixels
     static final int UNIT_SIZE = 25; // In Pixels.
     static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT / UNIT_SIZE);
-    static final int GAME_SPEED = 85; // THe lower the number, the faster the game, and vice versa.
+    static int GAME_SPEED = 85; // THe lower the number, the faster the game, and vice versa.
 
     final int x[] = new int[GAME_UNITS];
     final int y[] = new int[GAME_UNITS];
@@ -30,17 +30,36 @@ public class GamePanel extends JPanel implements ActionListener {
     private final Audio audio;
 
     GamePanel() {
-         audio = new Audio();
+        audio = new Audio();
         random = new Random();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.black);
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
+        chooseSpeed();
+    }
+    public void chooseSpeed() {
+        String[] options = {"Hard", "Medium", "Easy"};
+        int choice = JOptionPane.showOptionDialog(null, "Choose game speed:", "Speed Selection", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+
+        switch (choice) {
+            case 0: // Hard
+                GAME_SPEED = 75;
+                break;
+            case 1: // Medium
+                GAME_SPEED = 100;
+                break;
+            case 2: // East
+                GAME_SPEED = 150;
+                break;
+            default:
+                // Default to medium speed
+                GAME_SPEED = 100;
+                break;
+        }
 
         startGame();
-
     }
-
     public void startGame() {
         newApple();
         running = true;
@@ -190,7 +209,7 @@ public class GamePanel extends JPanel implements ActionListener {
 //        g.drawString("Play Again? Y/N: ", (SCREEN_WIDTH - fontMetrics3.stringWidth("Play Again? Y/N: ")) / 2, 420);
         int choice = JOptionPane.showConfirmDialog(null, "Do you want to play again?", "Game Over", JOptionPane.YES_NO_OPTION);
         if (choice == JOptionPane.YES_OPTION) {
-            startGame();
+            chooseSpeed();
         } else {
             // Perform actions for No option, like exit or display farewell message
             System.exit(0); // For example, exiting the game
