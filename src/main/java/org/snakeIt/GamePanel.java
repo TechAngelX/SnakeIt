@@ -1,12 +1,9 @@
 package org.snakeIt;
 
 import javax.swing.*;
-import javax.tools.Tool;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
-import java.util.Scanner;
-import javax.sound.sampled.*;
 
 
 public class GamePanel extends JPanel implements ActionListener {
@@ -24,10 +21,11 @@ public class GamePanel extends JPanel implements ActionListener {
     int appleX; // The X co-ordinate of where the apple is placed. will appear randomly each time snake eats apple.
     int appleY; // Ditto.
     char direction = 'R';
-    boolean running = false;
+    boolean snakeRunning = false;
     Timer timer;
     Random random;
     private final Audio audio;
+    private int lives = 3;
 
     GamePanel() {
         audio = new Audio();
@@ -62,7 +60,7 @@ public class GamePanel extends JPanel implements ActionListener {
     }
     public void startGame() {
         newApple();
-        running = true;
+        snakeRunning = true;
         bodyParts = 6; // Reset body parts
         applesEaten = 0; // Reset score
         direction = 'R'; // Reset direction
@@ -87,7 +85,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
 
     public void draw(Graphics g) {
-        if (running) {
+        if (snakeRunning) {
             g.setColor(Color.darkGray);
             for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) {
                 g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
@@ -113,7 +111,7 @@ public class GamePanel extends JPanel implements ActionListener {
             g.drawString("Score: "+ applesEaten, (SCREEN_WIDTH - fontMetrics.stringWidth("Score: "+ applesEaten)) / 2, g.getFont().getSize());
 
         } else {
-            gameOver(g);
+            getGraphics();
         }
 
     }
@@ -165,34 +163,43 @@ public class GamePanel extends JPanel implements ActionListener {
         // This checks if head collides with body
         for (int i = bodyParts; i > 0; i--) {
             if ((x[0] == x[i]) && (y[0] == y[i])) { // x[0]  and y[0] are the x and y positions of the HEAD of the snake.
-                running = false;
+                snakeRunning = false;
             }
         }
         // This checks if head touches LEFT border
         if (x[0] < 0) {
-            running = false; // Basically, if it touches itself, game over.
+            snakeRunning = false; // Basically, if it touches itself, game over.
         }
         // This checks if head touches RIGHT border
         if (x[0] > SCREEN_WIDTH) {
-            running = false;
+            snakeRunning = false;
         }
 
         // This checks if head touches TOP border
         if (y[0] < 0) {
-            running = false;
+            snakeRunning = false;
         }
         // This checks if head touches BOTTOM border
         if (y[0] > SCREEN_HEIGHT) {
-            running = false;
+            snakeRunning = false;
         }
-        if (!running) {
+        if (!snakeRunning) {
             timer.stop();
         }
-
+        // Checking collisions...
+        if (!snakeRunning) {
+            lives--;
+            if (lives > 0) {
+                startGame();
+            } else {
+                gameOver();
+            }
+        }
     }
 
-    public void gameOver(Graphics g) {
+    public void gameOver() {
         // Game Over Text
+        Graphics g = getGraphics();
         g.setColor(Color.green);
         g.setFont(new Font("Impact", Font.BOLD, 40));
         FontMetrics fontMetrics1 = getFontMetrics(g.getFont());
@@ -218,7 +225,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (running) {
+        if (snakeRunning) {
             move();
             checkAPple();
             checkCollisions();
