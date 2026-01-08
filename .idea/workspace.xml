@@ -5,16 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fbf28c6c-2fad-4b4b-b76c-f883cbea9588" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/readme_images/demo1.gif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/readme_images/logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/readme_images/screenshot1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/readme_images/screenshot2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/readme_images/screenshot3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/readme_images/screenshot4.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/snakeIt/Audio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/snakeIt/Audio.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/snakeIt/GamePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/snakeIt/GamePanel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,7 +21,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "git-widget-placeholder": "Merging main",
+    "git-widget-placeholder": "main",
     "node.js.selected.package.tslint": "(autodetect)"
   }
 }]]></component>

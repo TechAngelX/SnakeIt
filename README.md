@@ -1,9 +1,11 @@
-<h1 style="text-align: center;">SnakeIt</h1>
-
-
-<h4 style="text-align: center;">Relive your Nokia 3310 vibes !</h4>
+<div align="center">
+  <h1>SnakeIt</h1>
+  <h4>Relive your Nokia 3310 vibes !</h4>
 
 ![SnakeIt Interface](readme_images/demo1.gif)
+</div>
+
+
 
 ## 🎮 Gameplay
 You've played this game before. You know how it goes.
@@ -19,6 +21,14 @@ You've played this game before. You know how it goes.
 - Swing GUI (old skool, I know!)
 - Maven (project structure & build)
 
+<p align="center">
+  <img src="readme_images/screenshot1.png" width="45%" />
+  <img src="readme_images/screenshot2.png" width="45%" />
+</p>
+<p align="center">
+  <img src="readme_images/screenshot3.png" width="45%" />
+  <img src="readme_images/screenshot4.png" width="45%" />
+</p>
 ## 📂 Project Structure
 
 ```
@@ -85,7 +95,7 @@ java -cp target/classes org.snakeIt.SnakeGame
 
 ## Contributing
 
-Feel free to fork, experiment, and improve the project. Pull requests and suggestions are welcome.
+Feel free to fork, experiment, and improve the project. Pull requests and suggestions are most welcome.
 
 
 ## License
@@ -98,18 +108,13 @@ This work is licensed under a Creative Commons Attribution-NonCommercial-NoDeriv
 
 This project is for personal or educational use only and comes without any warranty.
 ***
-<h2 style="text-align: center;">Support</h2>
+<h2 align="center">Support</h2>
 <div align="center">
-  <span style="font-size: 1.4em; font-weight: 300;">
-    For issues or questions, feel free to reach out to me on GitHub.
-  </span>
+  For issues or questions, feel free to reach out to me on GitHub.
   <br /><br />
   <a href="https://techangelx.com" target="_blank" rel="noopener noreferrer">
-    <img src="./readme_images/logo.png" alt="Tech Angel X Logo" width="70" height="70" style="vertical-align: middle; border-radius: 50%; border: 4px solid #ffffff; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+    <img src="./readme_images/logo.png" alt="Tech Angel X Logo" width="70" height="70" style="border-radius: 50%; border: 4px solid #ffffff; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
   </a>
   <br /><br />
-  <span style="font-size: 1.4em; font-weight: 300;">
-    <b>Built by Ricki Angel</b> • <a href="https://techangelx.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">Tech Angel X</a>
-  </span>
+  <b>Built by Ricki Angel</b> • <a href="https://techangelx.com" target="_blank" rel="noopener noreferrer">Tech Angel X</a>
 </div>
-
