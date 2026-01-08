@@ -8,6 +8,11 @@ import java.util.Random;
 
 public class GamePanel extends JPanel implements ActionListener {
 
+    // Game States
+    static final int STATE_MENU = 0;
+    static final int STATE_PLAYING = 1;
+    static final int STATE_GAME_OVER = 2;
+
     static final int SCREEN_WIDTH = 600; // In pixels.
     static final int SCREEN_HEIGHT = 600; // In Pixels
     static final int UNIT_SIZE = 25; // In Pixels.
@@ -29,6 +34,10 @@ public class GamePanel extends JPanel implements ActionListener {
     private String currentDifficulty = "Medium";
     private int totalApplesCollected = 0;
     private int initialLives = 3;
+    private boolean gameOverDialogShown = false;
+    private int gameState = STATE_MENU;
+    private int menuAnimationFrame = 0;
+    private Timer menuTimer;
 
     GamePanel() {
         audio = new Audio();
@@ -37,7 +46,15 @@ public class GamePanel extends JPanel implements ActionListener {
         this.setBackground(Color.black);
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
-        chooseSpeed();
+
+        // Start menu animation timer
+        menuTimer = new Timer(200, e -> {
+            menuAnimationFrame++;
+            if (gameState == STATE_MENU) {
+                repaint();
+            }
+        });
+        menuTimer.start();
     }
     public void chooseSpeed() {
         String[] options = {"Hard", "Medium", "Easy"};
@@ -69,6 +86,7 @@ public class GamePanel extends JPanel implements ActionListener {
         newApple();
         snakeRunning = true;
         bodyParts = 6; // Reset body parts
+        gameOverDialogShown = false; // Reset dialog flag
 
         // Only reset total apples if this is a fresh game (all lives intact)
         if (lives == initialLives) {
@@ -96,9 +114,113 @@ public class GamePanel extends JPanel implements ActionListener {
 
     // *** GRID (Visual depiction of the grid. Can make user commnnds to turn on or off ***
 
+    public void drawMenu(Graphics g) {
+        // Retro background with animated scanlines
+        g.setColor(Color.black);
+        g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+        // Animated retro border (cycling colors)
+        Color[] borderColors = {
+            new Color(0, 255, 255),   // Cyan
+            new Color(255, 0, 255),   // Magenta
+            new Color(255, 255, 0),   // Yellow
+            new Color(0, 255, 0)      // Lime
+        };
+        Color borderColor = borderColors[menuAnimationFrame % 4];
+        g.setColor(borderColor);
+        for (int i = 0; i < 3; i++) {
+            g.drawRect(10 + i * 5, 10 + i * 5, SCREEN_WIDTH - 20 - i * 10, SCREEN_HEIGHT - 20 - i * 10);
+        }
+
+        // Draw retro pixel squares in corners (animated)
+        int squareSize = 20;
+        for (int i = 0; i < 3; i++) {
+            Color squareColor = borderColors[(menuAnimationFrame + i) % 4];
+            g.setColor(squareColor);
+            g.fillRect(40 + i * 30, 40, squareSize, squareSize);
+            g.fillRect(SCREEN_WIDTH - 60 - i * 30, 40, squareSize, squareSize);
+            g.fillRect(40 + i * 30, SCREEN_HEIGHT - 60, squareSize, squareSize);
+            g.fillRect(SCREEN_WIDTH - 60 - i * 30, SCREEN_HEIGHT - 60, squareSize, squareSize);
+        }
+
+        // Title "SNAKEIT" in 8-bit style
+        g.setColor(new Color(0, 255, 255)); // Cyan
+        g.setFont(new Font("Courier New", Font.BOLD, 90));
+        FontMetrics fm1 = getFontMetrics(g.getFont());
+        String title = "SNAKEIT";
+        int titleX = (SCREEN_WIDTH - fm1.stringWidth(title)) / 2;
+
+        // Shadow effect
+        g.setColor(new Color(255, 0, 255)); // Magenta shadow
+        g.drawString(title, titleX + 5, 145);
+        g.setColor(new Color(0, 255, 255)); // Cyan main
+        g.drawString(title, titleX, 140);
+
+        // Subtitle with retro colors
+        g.setFont(new Font("Courier New", Font.BOLD, 24));
+        FontMetrics fm2 = getFontMetrics(g.getFont());
+        g.setColor(new Color(255, 255, 0)); // Yellow
+        String subtitle = "CLASSIC ARCADE EDITION";
+        g.drawString(subtitle, (SCREEN_WIDTH - fm2.stringWidth(subtitle)) / 2, 180);
+
+        // Animated snake preview (simple moving blocks)
+        int snakeY = 250;
+        for (int i = 0; i < 6; i++) {
+            int offset = (menuAnimationFrame * 5 + i * UNIT_SIZE) % SCREEN_WIDTH;
+            if (i == 0) {
+                g.setColor(new Color(0, 255, 0)); // Bright green head
+            } else {
+                g.setColor(new Color(0, 200 - i * 15, 0)); // Gradient body
+            }
+            g.fillRect(offset, snakeY, UNIT_SIZE, UNIT_SIZE);
+            g.setColor(Color.black);
+            g.drawRect(offset, snakeY, UNIT_SIZE, UNIT_SIZE);
+        }
+
+        // Apple following the snake
+        int appleOffset = (menuAnimationFrame * 5 + 8 * UNIT_SIZE) % SCREEN_WIDTH;
+        g.setColor(Color.red);
+        g.fillOval(appleOffset, snakeY, UNIT_SIZE, UNIT_SIZE);
+
+        // Instructions in retro style
+        g.setFont(new Font("Courier New", Font.BOLD, 22));
+        FontMetrics fm3 = getFontMetrics(g.getFont());
+
+        g.setColor(new Color(255, 255, 255)); // White
+        String[] instructions = {
+            "USE ARROW KEYS TO MOVE",
+            "EAT APPLES TO GROW",
+            "AVOID WALLS AND YOURSELF",
+            "3 LIVES PER GAME"
+        };
+
+        int instrY = 320;
+        for (String line : instructions) {
+            g.drawString(line, (SCREEN_WIDTH - fm3.stringWidth(line)) / 2, instrY);
+            instrY += 35;
+        }
+
+        // Blinking "PRESS SPACE TO START" (8-bit style)
+        if (menuAnimationFrame % 2 == 0) {
+            g.setFont(new Font("Courier New", Font.BOLD, 28));
+            FontMetrics fm4 = getFontMetrics(g.getFont());
+            g.setColor(new Color(0, 255, 0)); // Bright green
+            String pressStart = ">>> PRESS SPACE TO START <<<";
+            g.drawString(pressStart, (SCREEN_WIDTH - fm4.stringWidth(pressStart)) / 2, 500);
+        }
+
+        // Credits at bottom
+        g.setFont(new Font("Courier New", Font.BOLD, 16));
+        FontMetrics fm5 = getFontMetrics(g.getFont());
+        g.setColor(new Color(180, 180, 255)); // Lighter blue
+        String credit = "\u00A9 2026 RICKI ANGEL | TECHANGELX";
+        g.drawString(credit, (SCREEN_WIDTH - fm5.stringWidth(credit)) / 2, SCREEN_HEIGHT - 30);
+    }
 
     public void draw(Graphics g) {
-        if (snakeRunning) {
+        if (gameState == STATE_MENU) {
+            drawMenu(g);
+        } else if (snakeRunning) {
             // Draw grid
             g.setColor(Color.darkGray);
             for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) {
@@ -322,18 +444,27 @@ public class GamePanel extends JPanel implements ActionListener {
             (SCREEN_WIDTH - fm3.stringWidth(prompt)) / 2,
             520);
 
-        // Show dialog
-        int choice = JOptionPane.showConfirmDialog(
-            null,
-            "Do you want to play again?",
-            "Game Over",
-            JOptionPane.YES_NO_OPTION);
+        // Show dialog after a delay (only once)
+        if (!gameOverDialogShown) {
+            gameOverDialogShown = true;
+            Timer dialogTimer = new Timer(5000, e -> {
+                int choice = JOptionPane.showConfirmDialog(
+                    null,
+                    "Do you want to play again?",
+                    "Game Over",
+                    JOptionPane.YES_NO_OPTION);
 
-        if (choice == JOptionPane.YES_OPTION) {
-            lives = initialLives; // Reset lives
-            chooseSpeed();
-        } else {
-            System.exit(0);
+                if (choice == JOptionPane.YES_OPTION) {
+                    lives = initialLives; // Reset lives
+                    gameState = STATE_MENU; // Return to menu
+                    menuAnimationFrame = 0; // Reset animation
+                    repaint();
+                } else {
+                    System.exit(0);
+                }
+            });
+            dialogTimer.setRepeats(false);
+            dialogTimer.start();
         }
     }
 
@@ -353,6 +484,14 @@ public class GamePanel extends JPanel implements ActionListener {
 
         @Override
         public void keyPressed(KeyEvent e) {
+            // Handle menu state
+            if (gameState == STATE_MENU && e.getKeyCode() == KeyEvent.VK_SPACE) {
+                gameState = STATE_PLAYING;
+                chooseSpeed();
+                return;
+            }
+
+            // Handle game controls
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_LEFT:
                     if (direction != 'R') {
