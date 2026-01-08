@@ -252,9 +252,8 @@ public class GamePanel extends JPanel implements ActionListener {
             lives--;
             if (lives > 0) {
                 startGame();
-            } else {
-                gameOver();
             }
+            // If lives == 0, gameOver will be called by draw() method
         }
     }
 
