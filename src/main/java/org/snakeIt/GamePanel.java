@@ -26,6 +26,9 @@ public class GamePanel extends JPanel implements ActionListener {
     Random random;
     private final Audio audio;
     private int lives = 3;
+    private String currentDifficulty = "Medium";
+    private int totalApplesCollected = 0;
+    private int initialLives = 3;
 
     GamePanel() {
         audio = new Audio();
@@ -43,16 +46,20 @@ public class GamePanel extends JPanel implements ActionListener {
         switch (choice) {
             case 0: // Hard
                 GAME_SPEED = 75;
+                currentDifficulty = "Hard";
                 break;
             case 1: // Medium
                 GAME_SPEED = 100;
+                currentDifficulty = "Medium";
                 break;
-            case 2: // East
+            case 2: // Easy
                 GAME_SPEED = 150;
+                currentDifficulty = "Easy";
                 break;
             default:
                 // Default to medium speed
                 GAME_SPEED = 100;
+                currentDifficulty = "Medium";
                 break;
         }
 
@@ -62,7 +69,13 @@ public class GamePanel extends JPanel implements ActionListener {
         newApple();
         snakeRunning = true;
         bodyParts = 6; // Reset body parts
-        applesEaten = 0; // Reset score
+
+        // Only reset total apples if this is a fresh game (all lives intact)
+        if (lives == initialLives) {
+            totalApplesCollected = 0;
+        }
+
+        applesEaten = 0; // Reset current run score
         direction = 'R'; // Reset direction
         timer = new Timer(GAME_SPEED, this);
         timer.start();
@@ -86,34 +99,83 @@ public class GamePanel extends JPanel implements ActionListener {
 
     public void draw(Graphics g) {
         if (snakeRunning) {
+            // Draw grid
             g.setColor(Color.darkGray);
             for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) {
                 g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
                 g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
             }
+
+            // Draw apple with enhanced visuals (gradient effect)
             g.setColor(Color.red);
             g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
+            g.setColor(new Color(139, 0, 0)); // Dark red for shadow effect
+            g.fillOval(appleX + 3, appleY + 3, UNIT_SIZE - 6, UNIT_SIZE - 6);
 
+            // Draw snake with enhanced colors
             for (int i = 0; i < bodyParts; i++) {
                 if (i == 0) {
-                    g.setColor(Color.green);
+                    // Snake head - bright lime green with border
+                    g.setColor(new Color(0, 255, 0)); // Bright green
                     g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                    g.setColor(new Color(0, 200, 0)); // Border
+                    g.drawRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
 
+                    // Add eyes to the head
+                    g.setColor(Color.black);
+                    int eyeSize = 4;
+                    if (direction == 'R') {
+                        g.fillOval(x[i] + 15, y[i] + 5, eyeSize, eyeSize);
+                        g.fillOval(x[i] + 15, y[i] + 15, eyeSize, eyeSize);
+                    } else if (direction == 'L') {
+                        g.fillOval(x[i] + 5, y[i] + 5, eyeSize, eyeSize);
+                        g.fillOval(x[i] + 5, y[i] + 15, eyeSize, eyeSize);
+                    } else if (direction == 'U') {
+                        g.fillOval(x[i] + 5, y[i] + 5, eyeSize, eyeSize);
+                        g.fillOval(x[i] + 15, y[i] + 5, eyeSize, eyeSize);
+                    } else { // DOWN
+                        g.fillOval(x[i] + 5, y[i] + 15, eyeSize, eyeSize);
+                        g.fillOval(x[i] + 15, y[i] + 15, eyeSize, eyeSize);
+                    }
                 } else {
-                    g.setColor(new Color(45, 180, 0)); //RGB Colours
+                    // Body with gradient effect - darker as you go back
+                    int greenValue = Math.max(100, 180 - (i * 5));
+                    g.setColor(new Color(45, greenValue, 0));
                     g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                    g.setColor(new Color(35, greenValue - 20, 0)); // Border
+                    g.drawRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
             }
-            // SCORE BOARD
+
+            // === SCORE DISPLAY (top center) ===
             g.setColor(Color.red);
-            g.setFont(new Font("Impact",Font.BOLD,40));
+            g.setFont(new Font("Impact", Font.BOLD, 40));
             FontMetrics fontMetrics = getFontMetrics(g.getFont());
-            g.drawString("Score: "+ applesEaten, (SCREEN_WIDTH - fontMetrics.stringWidth("Score: "+ applesEaten)) / 2, g.getFont().getSize());
+            g.drawString("Score: " + applesEaten,
+                (SCREEN_WIDTH - fontMetrics.stringWidth("Score: " + applesEaten)) / 2,
+                g.getFont().getSize());
+
+            // === LIVES DISPLAY (top left) using Unicode hearts ===
+            g.setColor(Color.red);
+            g.setFont(new Font("Serif", Font.PLAIN, 30));
+            String heartsDisplay = "";
+            for (int i = 0; i < lives; i++) {
+                heartsDisplay += "\u2665 "; // Unicode filled heart
+            }
+            g.drawString(heartsDisplay, 10, 35);
+
+            // === DIFFICULTY DISPLAY (top right) ===
+            g.setColor(Color.yellow);
+            g.setFont(new Font("Impact", Font.BOLD, 20));
+            FontMetrics diffMetrics = getFontMetrics(g.getFont());
+            String diffText = "Difficulty: " + currentDifficulty;
+            g.drawString(diffText,
+                SCREEN_WIDTH - diffMetrics.stringWidth(diffText) - 10,
+                30);
 
         } else {
-            getGraphics();
+            gameOver(g);
         }
-
     }
 
     public void newApple() {
@@ -149,13 +211,11 @@ public class GamePanel extends JPanel implements ActionListener {
     public void checkAPple() {
         if ((x[0] == appleX) && (y[0] == appleY)) { // x[0]  and y[0] are the x and y positions of the HEAD of the snake.
             applesEaten++;
+            totalApplesCollected++;
             newApple();
             bodyParts++;
-           audio.audioEatApple();
-
-
+            audio.audioEatApple();
         }
-
     }
 
     public void checkCollisions() {
@@ -185,6 +245,7 @@ public class GamePanel extends JPanel implements ActionListener {
         }
         if (!snakeRunning) {
             timer.stop();
+            audio.audioCollision();
         }
         // Checking collisions...
         if (!snakeRunning) {
@@ -197,29 +258,83 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
-    public void gameOver() {
-        // Game Over Text
-        Graphics g = getGraphics();
-        g.setColor(Color.green);
-        g.setFont(new Font("Impact", Font.BOLD, 40));
-        FontMetrics fontMetrics1 = getFontMetrics(g.getFont());
-        g.drawString("Final Score: " + applesEaten, (SCREEN_WIDTH - fontMetrics1.stringWidth("Final Score: " + applesEaten)) / 2, g.getFont().getSize());
+    public void gameOver(Graphics g) {
+        // Dark overlay for better text visibility
+        g.setColor(new Color(0, 0, 0, 180)); // Semi-transparent black
+        g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
+        // "GAME OVER" title
         g.setColor(Color.red);
         g.setFont(new Font("Impact", Font.BOLD, 75));
-        FontMetrics fontMetrics2 = getFontMetrics(g.getFont());
-        g.drawString("Game Over", (SCREEN_WIDTH - fontMetrics2.stringWidth("Game Over")) / 2, SCREEN_HEIGHT / 2);
+        FontMetrics fm1 = getFontMetrics(g.getFont());
+        g.drawString("GAME OVER",
+            (SCREEN_WIDTH - fm1.stringWidth("GAME OVER")) / 2,
+            150);
 
+        // Statistics section
+        g.setColor(Color.white);
+        g.setFont(new Font("Impact", Font.BOLD, 30));
+        FontMetrics fm2 = getFontMetrics(g.getFont());
+
+        int statsY = 250;
+        int lineSpacing = 45;
+
+        // Final Score (last run)
+        String finalScore = "Final Run Score: " + applesEaten;
+        g.drawString(finalScore,
+            (SCREEN_WIDTH - fm2.stringWidth(finalScore)) / 2,
+            statsY);
+
+        // Total Apples Collected
+        g.setColor(Color.yellow);
+        String totalScore = "Total Apples Collected: " + totalApplesCollected;
+        g.drawString(totalScore,
+            (SCREEN_WIDTH - fm2.stringWidth(totalScore)) / 2,
+            statsY + lineSpacing);
+
+        // Lives Used
+        g.setColor(Color.red);
+        int livesUsed = initialLives - lives;
+        String livesText = "Lives Used: " + livesUsed + "/" + initialLives;
+        g.drawString(livesText,
+            (SCREEN_WIDTH - fm2.stringWidth(livesText)) / 2,
+            statsY + lineSpacing * 2);
+
+        // Difficulty
+        g.setColor(Color.cyan);
+        String diffText = "Difficulty: " + currentDifficulty;
+        g.drawString(diffText,
+            (SCREEN_WIDTH - fm2.stringWidth(diffText)) / 2,
+            statsY + lineSpacing * 3);
+
+        // Snake Length Achieved
         g.setColor(Color.green);
-        g.setFont(new Font("Impact", Font.BOLD, 20));
-        FontMetrics fontMetrics3 = getFontMetrics(g.getFont());
-//        g.drawString("Play Again? Y/N: ", (SCREEN_WIDTH - fontMetrics3.stringWidth("Play Again? Y/N: ")) / 2, 420);
-        int choice = JOptionPane.showConfirmDialog(null, "Do you want to play again?", "Game Over", JOptionPane.YES_NO_OPTION);
+        String lengthText = "Max Snake Length: " + bodyParts;
+        g.drawString(lengthText,
+            (SCREEN_WIDTH - fm2.stringWidth(lengthText)) / 2,
+            statsY + lineSpacing * 4);
+
+        // Play Again prompt
+        g.setColor(Color.lightGray);
+        g.setFont(new Font("Impact", Font.PLAIN, 20));
+        FontMetrics fm3 = getFontMetrics(g.getFont());
+        String prompt = "Play Again?";
+        g.drawString(prompt,
+            (SCREEN_WIDTH - fm3.stringWidth(prompt)) / 2,
+            520);
+
+        // Show dialog
+        int choice = JOptionPane.showConfirmDialog(
+            null,
+            "Do you want to play again?",
+            "Game Over",
+            JOptionPane.YES_NO_OPTION);
+
         if (choice == JOptionPane.YES_OPTION) {
+            lives = initialLives; // Reset lives
             chooseSpeed();
         } else {
-            // Perform actions for No option, like exit or display farewell message
-            System.exit(0); // For example, exiting the game
+            System.exit(0);
         }
     }
 
