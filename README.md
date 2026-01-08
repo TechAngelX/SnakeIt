@@ -1,22 +1,22 @@
-#  SnakeIt
+<h1 style="text-align: center;">SnakeIt</h1>
 
-<p align="center">
-  <img src="src/main/resources/Screenshot1.png" width="45%" />
-  <img src="src/main/resources/Screenshot2.png" width="45%" />
-</p>
+
+<h4 style="text-align: center;">Relive your Nokia 3310 vibes !</h4>
+
+![SnakeIt Interface](readme_images/demo1.gif)
 
 ## 🎮 Gameplay
-
+You've played this game before. You know how it goes.
 - Use the arrow keys to control the snake
 - Eat apples to grow longer
 - The game ends if you:
   - Hit the wall
   - Run into yourself
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - Java
-- Swing (GUI)
+- Swing GUI (old skool, I know!)
 - Maven (project structure & build)
 
 ## 📂 Project Structure
@@ -80,23 +80,23 @@ java -cp target/classes org.snakeIt.SnakeGame
 
 ## 📚 Credits
 
-- [Bro Code](https://www.youtube.com/watch?v=bI6e6qjJ8JQ) – Snake Game tutorial
+- [Bro Code](https://www.youtube.com/watch?v=bI6e6qjJ8JQ) – Adapted from the Snake Game tutorial
 - [Stack Overflow](https://stackoverflow.com/questions/34036216/drawing-java-grid-using-swing) – Java Swing grid rendering
 
-## 🤝 Contributing
+## Contributing
 
 Feel free to fork, experiment, and improve the project. Pull requests and suggestions are welcome.
 
 
 ## License
-
+Creative Commons:
 © Ricki Angel 2026 | TechAngelX
-Internal use only.
 
+This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
 
 ## Disclaimer
 
-This tool is for personal or educational use only and comes without any warranty.
+This project is for personal or educational use only and comes without any warranty.
 ***
 <h2 style="text-align: center;">Support</h2>
 <div align="center">
