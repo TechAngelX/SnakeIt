@@ -5,12 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fbf28c6c-2fad-4b4b-b76c-f883cbea9588" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/readme_images/demo1.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/readme_images/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/readme_images/screenshot1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/readme_images/screenshot2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/readme_images/screenshot3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/readme_images/screenshot4.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/snakeIt/Audio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/snakeIt/Audio.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/snakeIt/GamePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/snakeIt/GamePanel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,7 +29,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "git-widget-placeholder": "refactor/gameplay-enhancements",
+    "git-widget-placeholder": "Merging main",
     "node.js.selected.package.tslint": "(autodetect)"
   }
 }]]></component>
